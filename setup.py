@@ -7,5 +7,6 @@ setuptools.setup(
     author="Zhengnan Zhao",
     description="importscanner helps identify your project's direct dependencies",
     url="https://github.com/ZhengnanZhao/importscanner",
-    packages=setuptools.find_packages()
+    packages=setuptools.find_packages(),
+    entry_points={'console_scripts': ['importscanner=importscanner.scan:main']}
 )
