@@ -1,5 +1,7 @@
-"""This module provides functionality to scan a repo and extract the names
-of packages imported in said repo."""
+"""This module provides functionality to scan a repo and extract the names of packages
+imported in said repo. Except for import statements mentioned in docstrings, comments,
+and regular strings, all other imported packages will be extracted.
+"""
 
 
 import os
@@ -20,10 +22,12 @@ def remove_strings_and_comments(file_content: str) -> str:
     Returns:
         Content of the original file stripped of strings and comments.
     """
+    # Remove strings enclosed in triple quotes
     for pattern_to_remove in ['"{3}.*?"{3}', "'{3}.*?'{3}"]:
         pattern_to_remove = re.compile(pattern_to_remove, re.DOTALL)  # DOTALL allows matching of multi-line strings
         file_content = re.sub(pattern_to_remove, '', file_content)
 
+    # Remove comments and strings enclosed in single quotes
     for pattern_to_remove in ['".*?"', "'.*?'", '#+.*']:
         file_content = re.sub(pattern_to_remove, '', file_content)
 
