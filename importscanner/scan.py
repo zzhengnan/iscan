@@ -58,9 +58,10 @@ def extract_package_name(line: str) -> str:
         return match_1.groups()[0]
 
     pattern_2 = re.compile(
-        r"""\s*        # 0 or more spaces
-            from \s+   # The word "from" followed by 1 or more spaces
-            (\w+)""",  # Name of the package
+        r"""\s*            # 0 or more spaces
+            from \s+       # The word "from" followed by 1 or more spaces
+            (\w+) \.* \s+  # Name of the package followed by an optional sub-package and then 1 or more spaces
+            import""",     # The word "import"
         re.VERBOSE
     )
     match_2 = re.search(pattern_2, line)
