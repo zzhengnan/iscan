@@ -20,16 +20,11 @@ def remove_strings_and_comments(file_content: str) -> str:
     Returns:
         Content of the original file stripped of strings and comments.
     """
-    triple_quotes = '["\']{3}'
-    triple_quotes = triple_quotes + '.*?' + triple_quotes
-    triple_quotes = re.compile(triple_quotes, re.DOTALL)  # DOTALL allows matching of multi-line strings
+    for pattern_to_remove in ['"{3}.*?"{3}', "'{3}.*?'{3}"]:
+        pattern_to_remove = re.compile(pattern_to_remove, re.DOTALL)  # DOTALL allows matching of multi-line strings
+        file_content = re.sub(pattern_to_remove, '', file_content)
 
-    single_quote = '["\']'
-    single_quote = single_quote + '.*?' + single_quote
-
-    comment = '#+.*'
-
-    for pattern_to_remove in [triple_quotes, single_quote, comment]:
+    for pattern_to_remove in ['".*?"', "'.*?'", '#+.*']:
         file_content = re.sub(pattern_to_remove, '', file_content)
 
     return file_content
