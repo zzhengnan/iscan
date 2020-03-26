@@ -1,6 +1,5 @@
-"""This module provides functionality to scan a repo and extract the names of packages
-imported in said repo. Except for import statements mentioned in docstrings, comments,
-and regular strings, all other imported packages will be extracted.
+"""This module provides functionality to scan a repo and
+extract the names of packages imported in said repo.
 """
 
 
@@ -11,6 +10,11 @@ import sys
 
 
 class ImportScanner(ast.NodeVisitor):
+    """Scanner to look for import statements.
+
+    Based on Matt Layman's work at
+    https://www.mattlayman.com/blog/2018/decipher-python-ast/
+    """
     def __init__(self):
         self.imports = []
 
