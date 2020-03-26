@@ -48,6 +48,25 @@ def collect_file_paths(path_to_repo: str) -> list:
     return fpaths
 
 
+def extract_unique_packages(packages: list) -> list:
+    """Extract unique package names.
+
+    Each element in the returned list is the base name of a package.
+    E.g., if pandas.testing is provided as an input, pandas will get returned.
+
+    Args:
+        packages: A list of packages that may contain duplicates.
+
+    Returns:
+        List of unique package names.
+    """
+    unique_packages = []
+    for package in packages:
+        base_name = re.search(r'(\w+).*', package).groups()[0]
+        unique_packages.append(base_name)
+    return sorted(set(unique_packages))
+
+
 def scan_repo(path_to_repo: str) -> list:
     """Extract names of unique packages imported in a repo.
 
@@ -63,14 +82,14 @@ def scan_repo(path_to_repo: str) -> list:
         with open(fpath, 'r') as f:
             file_ast = ast.parse(f.read())
         scanner.visit(file_ast)
-    unique_imports = sorted(set(scanner.report()))
-    return unique_imports
+    unique_packages = extract_unique_packages(scanner.report())
+    return unique_packages
 
 
 def main():
     path_to_repo = sys.argv[1]
-    unique_imports = scan_repo(path_to_repo)
-    print('\n'.join(unique_imports))
+    unique_packages = scan_repo(path_to_repo)
+    print('\n'.join(unique_packages))
 
 
 if __name__ == '__main__':
