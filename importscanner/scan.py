@@ -72,10 +72,9 @@ def get_base_name(full_name: str) -> str:
 
 
 def convert_source_to_tree(fpath: str) -> ast.Module:
-    if fpath.endswith('.py'):
-        with open(fpath, 'r') as f:
-            tree = ast.parse(f.read())
-        return tree
+    with open(fpath, 'r') as f:
+        tree = ast.parse(f.read())
+    return tree
 
 
 def scan_repo(path_to_repo: str) -> list:
@@ -95,6 +94,8 @@ def scan_repo(path_to_repo: str) -> list:
         for fname in fnames:
             # Convert source code into tree
             fpath = os.path.join(root_dir, fname)
+            if not fpath.endswith('.py'):
+                continue
             tree = convert_source_to_tree(fpath)
 
             # Extract imports for current file
