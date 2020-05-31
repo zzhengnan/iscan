@@ -9,7 +9,7 @@ setuptools.setup(
     url="https://github.com/ZhengnanZhao/iscan",
     packages=setuptools.find_packages(),
     extras_require={
-        "dev": ["pytest"]
+        "dev": ["pytest", "setuptools", "twine", "wheel"]
     },
     entry_points={'console_scripts': ['iscan=iscan.scan:main']}
 )
