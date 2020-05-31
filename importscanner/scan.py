@@ -1,16 +1,14 @@
-"""This module provides functionality to scan a repo and aggregate
-the names of packages imported across all python files.
+"""This module provides functionality to scan a directory and aggregate
+the names of packages imported across all python files in said directory.
 """
-
-
 import ast
-import os
-import re
 import sys
+from os import walk
+from os.path import join
 
 
 class ImportScanner(ast.NodeVisitor):
-    """Scanner to look for import statements."""
+    """Scanner to look for imported packages."""
 
     def __init__(self):
         self.imports = []
@@ -54,63 +52,66 @@ class ImportScanner(ast.NodeVisitor):
         self.generic_visit(node)
 
     def get_imports(self):
-        return self.imports
+        return sorted(self.imports)
 
 
 def get_base_name(full_name: str) -> str:
-    """Extract the base name of a package/module.
+    """Extract the base name of a package.
 
     Args:
-        full_name: Full name of the package/module of interest. E.g., pandas.testing
+        full_name: Full name of the package of interest, e.g., pandas.testing
 
     Returns:
-        base_name: Base name of the provided package/module. E.g., pandas
+        Base name of the provided package, e.g., pandas
     """
-    pattern = r'(\w+).*'
-    base_name = re.search(pattern, full_name).groups()[0]
-    return base_name
+    return full_name.split('.')[0]
 
 
 def convert_source_to_tree(fpath: str) -> ast.Module:
+    """Convert source code into abstract syntax tree.
+
+    Args:
+        fpath: Path to the python file of interest
+
+    Returns:
+        AST representation of the source code
+    """
     with open(fpath, 'r') as f:
         tree = ast.parse(f.read())
     return tree
 
 
-def scan_repo(path_to_repo: str) -> list:
-    """Extract names of unique packages imported in a repo.
+def scan_directory(path_to_dir: str) -> list:
+    """Extract names of unique packages imported across all python files in a directory.
 
     Args:
-        path_to_repo: Path to the repo of interest
+        path_to_dir: Path to the directory of interest
 
     Returns:
-        List of unique packages imported in the repo
+        List of unique packages imported
     """
     all_imports = []
-    for root_dir, subdirs, fnames in os.walk(top=path_to_repo):
-        # TODO: Get name of package under investigation and add to this
-        local_modules = subdirs + [fname.replace('.py', '') for fname in fnames]
-
+    for root_dir, _, fnames in walk(top=path_to_dir):
         for fname in fnames:
-            # Convert source code into tree
-            fpath = os.path.join(root_dir, fname)
-            if not fpath.endswith('.py'):
+            # Skip non-python files
+            if not fname.endswith('.py'):
                 continue
+
+            # Convert source code into tree
+            fpath = join(root_dir, fname)
             tree = convert_source_to_tree(fpath)
 
             # Extract imports for current file
             scanner = ImportScanner()
             scanner.visit(tree)
-            current_imports = map(get_base_name, scanner.get_imports())
-            current_imports = [imp for imp in current_imports if imp not in local_modules]
-            all_imports.extend(current_imports)
+            all_imports.extend(scanner.get_imports())
 
-    return sorted(set(all_imports))
+    return sorted(set(map(get_base_name, all_imports)))
 
 
 def main():
-    path_to_repo = sys.argv[1]
-    unique_imports = scan_repo(path_to_repo)
+    path_to_dir = sys.argv[1]
+    unique_imports = scan_directory(path_to_dir)
     print('\n'.join(unique_imports))
 
 
