@@ -1,141 +1,118 @@
-"""This module provides functionality to scan a repo and extract the names of packages
-imported in said repo. Except for import statements mentioned in docstrings, comments,
-and regular strings, all other imported packages will be extracted.
+"""This module provides functionality to scan a directory and aggregate
+the names of packages imported across all python files in said directory.
 """
-
-
-import os
-import re
+import ast
 import sys
+from os import walk
+from os.path import join
 
 
-def remove_strings_and_comments(file_content: str) -> str:
-    """Remove strings and comments from a file.
+class ImportScanner(ast.NodeVisitor):
+    """Scanner to look for imported packages."""
 
-    All forms of single- and multi-line strings enclosed in single (e.g., 'foo' and "foo")
-    and triple quotes will be removed. Likewise, all forms of single-, multi-line,
-    and inline comments will be removed.
+    def __init__(self):
+        self.imports = []
 
-    Args:
-        file_content: Original string representation of a file.
+    def visit_Import(self, node):
+        """Extract imports of the form `import foo`.
 
-    Returns:
-        Content of the original file stripped of strings and comments.
-    """
-    # Remove strings enclosed in triple quotes
-    for pattern_to_remove in ['"{3}.*?"{3}', "'{3}.*?'{3}"]:
-        pattern_to_remove = re.compile(pattern_to_remove, re.DOTALL)  # DOTALL allows matching of multi-line strings
-        file_content = re.sub(pattern_to_remove, '', file_content)
+        >>> import_statement = 'import os.path.join as jn, datetime.datetime as dt'
+        >>> ast.dump(ast.parse(import_statement))
+        "Module(body=[
+            Import(
+                names=[alias(name='os.path.join', asname='jn'),
+                       alias(name='datetime.datetime', asname='dt')]
+            )
+        ])"
+        """
+        for alias in node.names:
+            self.imports.append(alias.name)
+        self.generic_visit(node)
 
-    # Remove comments and strings enclosed in single quotes
-    for pattern_to_remove in ['".*?"', "'.*?'", '#+.*']:
-        file_content = re.sub(pattern_to_remove, '', file_content)
+    def visit_ImportFrom(self, node):
+        """Extract imports of the form `from foo import bar`.
 
-    return file_content
+        Relative imports such as `from ..utils import foo` will be ignored.
 
+        >>> import_statement = 'from os.path import join as jn, split'
+        >>> ast.dump(ast.parse(import_statement))
+        "Module(body=[
+            ImportFrom(
+                module='os.path',
+                names=[alias(name='join', asname='jn'),
+                       alias(name='split', asname=None)],
+                level=0
+            )
+        ])"
+        """
+        # Ignore relative imports, for which node.level > 0
+        # E.g., `from ..utils import foo` has a node.level of 2
+        if node.level == 0:
+            self.imports.append(node.module)
+        self.generic_visit(node)
 
-def extract_package_name(line: str) -> str:
-    """Extract name of the imported package from a line.
-
-    Work with both forms of import statements.
-    >>> import pandas as pd
-    >>> from pandas import DataFrame
-
-    Known issue: Does not work when importing multiple packages on the same line.
-    >>> import pandas as pd, numpy as np
-
-    Args:
-        line: A single line from a source file.
-
-    Returns:
-        Name of the imported package if applicable, and None otherwise.
-    """
-    # Spaces and comments are ignored with the VERBOSE flag
-    pattern_1 = re.compile(
-        r"""^\s*        # 0 or more spaces. Need the ^ to distinguish from the second pattern
-            import \s+  # The word "import" followed by 1 or more spaces
-            (\w+)""",   # Name of the package
-        re.VERBOSE
-    )
-    match_1 = re.search(pattern_1, line)
-    if match_1:
-        return match_1.groups()[0]
-
-    pattern_2 = re.compile(
-        r"""\s*            # 0 or more spaces
-            from \s+       # The word "from" followed by 1 or more spaces
-            (\w+) \.* \s+  # Name of the package followed by an optional sub-package and then 1 or more spaces
-            import""",     # The word "import"
-        re.VERBOSE
-    )
-    match_2 = re.search(pattern_2, line)
-    if match_2:
-        return match_2.groups()[0]
-
-    return None
+    def get_imports(self):
+        return sorted(self.imports)
 
 
-def collect_file_paths(path_to_repo: str) -> list:
-    """Collect all python files in a repo.
-
-    Python files refer specifically to files with a .py extension.
+def get_base_name(full_name: str) -> str:
+    """Extract the base name of a package.
 
     Args:
-        path_to_repo: Path to the repo of interest.
+        full_name: Full name of the package of interest, e.g., pandas.testing
 
     Returns:
-        List of python files in the repo.
+        Base name of the provided package, e.g., pandas
     """
-    fpaths = []
-    for root_dir, _, fnames in os.walk(top=path_to_repo):
+    return full_name.split('.')[0]
+
+
+def convert_source_to_tree(fpath: str) -> ast.Module:
+    """Convert source code into abstract syntax tree.
+
+    Args:
+        fpath: Path to the python file of interest
+
+    Returns:
+        AST representation of the source code
+    """
+    with open(fpath, 'r') as f:
+        tree = ast.parse(f.read())
+    return tree
+
+
+def scan_directory(path_to_dir: str) -> list:
+    """Extract names of unique packages imported across all python files in a directory.
+
+    Args:
+        path_to_dir: Path to the directory of interest
+
+    Returns:
+        List of unique packages imported
+    """
+    all_imports = []
+    for root_dir, _, fnames in walk(top=path_to_dir):
         for fname in fnames:
-            if fname.endswith('.py'):
-                full_path = os.path.join(root_dir, fname)
-                fpaths.append(full_path)
-    return fpaths
+            # Skip non-python files
+            if not fname.endswith('.py'):
+                continue
 
+            # Convert source code into tree
+            fpath = join(root_dir, fname)
+            tree = convert_source_to_tree(fpath)
 
-def scan_file(file_content: str) -> list:
-    """Extract names of unique packages imported in a file.
+            # Extract imports for current file
+            scanner = ImportScanner()
+            scanner.visit(tree)
+            all_imports.extend(scanner.get_imports())
 
-    Args:
-        file_content: String representation of a file.
-
-    Returns:
-        List of unique packages imported in the file.
-    """
-    imported_pkgs = []
-    file_content = remove_strings_and_comments(file_content)
-    lines = file_content.split('\n')
-    for line in lines:
-        pkg_name = extract_package_name(line)
-        if pkg_name:
-            imported_pkgs.append(pkg_name)
-    return sorted(set(imported_pkgs))
-
-
-def scan_repo(path_to_repo: str) -> list:
-    """Extract names of unique packages imported in a repo.
-
-    Args:
-        path_to_repo: Path to the repo of interest.
-
-    Returns:
-        List of unique packages imported in the repo.
-    """
-    imported_pkgs = []
-    fpaths_to_scan = collect_file_paths(path_to_repo)
-    for fpath in fpaths_to_scan:
-        with open(fpath, 'r') as f:
-            file_content = f.read()
-        imported_pkgs.extend(scan_file(file_content))
-    return sorted(set(imported_pkgs))
+    return sorted(set(map(get_base_name, all_imports)))
 
 
 def main():
-    path_to_repo = sys.argv[1]
-    imported_pkgs = scan_repo(path_to_repo)
-    print('\n'.join(imported_pkgs))
+    path_to_dir = sys.argv[1]
+    unique_imports = scan_directory(path_to_dir)
+    print('\n'.join(unique_imports))
 
 
 if __name__ == '__main__':
