@@ -1,184 +1,22 @@
-# `importscanner`: Scan your project for direct dependencies
-Ever lost count of (or wondered) which packages your project depends on? `importscanner` will give you a list of your project's direct dependencies.
+# `iscan``: Scan your project for direct dependencies
+Ever lost count of (or wondered) which packages your project depends on? `iscan` will give you a list of your project's direct dependencies.
 
 ## Installation
 ```bash
-pip install importscanner
+pip install iscan 
 ```
 
 ## Usage
-Specify the path to the project you wish to scan.
+Specify the path to the directory you wish to scan.
 ```bash
-importscanner [path-to-project]
+iscan path/to/dir 
 ```
 
 ## Example output
-Running the utility against a local copy of `pandas` produces the following.
+Running the utility against a local clone of the `pandas` repo produces the following.
 ```bash
-importscanner ~/Desktop/pandas
+iscan path/to/pandas
 ```
 
-<details>
-<summary>pandas' direct dependencies</summary>
-0
-AppKit
-ConfigParser
-Cython
-Foundation
-IPython
-MultiIndex
-None
-PyQt4
-PyQt5
-__main__
-a
-abc
-an
-announce
-application
-argparse
-array
-ast
-axis
-before
-botocore
-bs4
-builtins
-bz2
-cStringIO
-calendar
-caught
-codecs
-collections
-configparser
-contextlib
-copy
-csv
-ctypes
-cx_Freeze
-cycler
-dask
-dataclasses
-datetime
-dateutil
-decimal
-distutils
-doctest
-docutils
-e
-email
-err
-errno
-exc
-fastparquet
-feedparser
-flake8
-fractions
-functools
-gc
-git
-glob
-gzip
-http
-hypothesis
-importlib
-individual
-inner_exc
-inspect
-io
-itertools
-jedi
-jinja2
-json
-keyword
-locale
-logging
-lxml
-lzma
-markdown
-math
-matplotlib
-mmap
-mpl_toolkits
-multiprocessing
-nbconvert
-numba
-numbers
-numexpr
-numpy
-numpydoc
-object
-odf
-openpyxl
-operator
-optparse
-orig
-os
-other
-pandas
-partial
-pathlib
-pg8000
-pickle
-pkg_resources
-platform
-pprint
-psycopg2
-py
-pyarrow
-pydoc
-pylab
-pymysql
-pytest
-pytz
-pyxlsb
-qtpy
-random
-re
-requests
-s3fs
-scipy
-self
-sequential
-setuptools
-shutil
-sklearn
-specified
-sphinx
-sqlalchemy
-sqlite3
-statsmodels
-string
-struct
-subprocess
-sys
-tables
-tarfile
-tempfile
-textwrap
-the
-threading
-time
-token
-tokenize
-types
-typing
-unicodedata
-updating
-urllib
-uuid
-validate_docstrings
-validate_unwanted_patterns
-versioneer
-warnings
-weakref
-webbrowser
-which
-xarray
-xlrd
-xlsxwriter
-xlwt
-xml
-yaml
-zipfile
-</details>
+TODO: Fill out the rest
+
