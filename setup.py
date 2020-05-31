@@ -2,11 +2,11 @@ import setuptools
 
 
 setuptools.setup(
-    name="importscanner",
-    version="0.0.1",
+    name="iscan",
+    version="0.1.0",
     author="Zhengnan Zhao",
-    description="importscanner helps identify your project's direct dependencies",
-    url="https://github.com/ZhengnanZhao/importscanner",
+    description="iscan aggregates your project's direct dependencies",
+    url="https://github.com/ZhengnanZhao/iscan",
     packages=setuptools.find_packages(),
-    entry_points={'console_scripts': ['importscanner=importscanner.scan:main']}
+    entry_points={'console_scripts': ['iscan=iscan.scan:main']}
 )
