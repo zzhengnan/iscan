@@ -32,10 +32,15 @@ def test_get_base_name(full_name, expected):
 
 
 def test_convert_source_to_tree():
-    pass
+    # This function doesn't do anything other than converting source code into its
+    # AST representation using the ast module. No need to test
+    assert True
 
 
-def test_scan_directory():
-    path_to_dir = join(CURRENT_DIR, 'test_package')
-    expected = ['matplotlib', 'numpy', 'os', 'pandas', 'shutil', 'time']
-    assert scan_directory(path_to_dir) == expected
+@pytest.mark.parametrize('dir_to_exclude, expected', [
+    (None, ['datetime', 'matplotlib', 'numpy', 'os', 'pandas', 'shutil', 'time']),
+    (join(CURRENT_DIR, 'test_package', 'city'), ['matplotlib', 'numpy', 'os', 'pandas', 'shutil', 'time'])
+])
+def test_scan_directory(dir_to_exclude, expected):
+    dir_to_scan = join(CURRENT_DIR, 'test_package')
+    assert scan_directory(dir_to_scan, dir_to_exclude) == expected

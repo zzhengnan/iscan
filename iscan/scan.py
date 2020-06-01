@@ -4,7 +4,7 @@ the names of packages imported across all python files in said directory.
 import ast
 import sys
 from os import walk
-from os.path import join
+from os.path import abspath, join
 
 
 class ImportScanner(ast.NodeVisitor):
@@ -81,17 +81,22 @@ def convert_source_to_tree(fpath: str) -> ast.Module:
     return tree
 
 
-def scan_directory(path_to_dir: str) -> list:
+def scan_directory(dir_to_scan: str, dir_to_exclude: str) -> list:
     """Extract names of unique packages imported across all python files in a directory.
 
     Args:
-        path_to_dir: Path to the directory of interest
+        dir_to_scan: Path to the directory of interest
 
     Returns:
         List of unique packages imported
     """
     all_imports = []
-    for root_dir, _, fnames in walk(top=path_to_dir):
+    for root_dir, _, fnames in walk(top=dir_to_scan):
+        # Skip excluded directory
+        if dir_to_exclude is not None:
+            if abspath(root_dir) == abspath(dir_to_exclude):
+                continue
+
         for fname in fnames:
             # Skip non-python files
             if not fname.endswith('.py'):
@@ -110,9 +115,18 @@ def scan_directory(path_to_dir: str) -> list:
 
 
 def main():
-    path_to_dir = sys.argv[1]
-    unique_imports = scan_directory(path_to_dir)
-    print('\n'.join(unique_imports))
+    args = sys.argv[1:]
+    if len(args) == 1:
+        dir_to_scan, dir_to_exclude = args[0], None
+    elif len(args) == 2:
+        dir_to_scan, dir_to_exclude = args
+    else:
+        raise ValueError('You may pass either one or two arguments.')
+
+    unique_imports = scan_directory(dir_to_scan, dir_to_exclude)
+    end = ', EXCLUDING those in {}\n'.format(dir_to_exclude) if dir_to_exclude else '\n'
+    print('Packages imported across all python files in {}'.format(dir_to_scan), end=end)
+    print(unique_imports)
 
 
 if __name__ == '__main__':
