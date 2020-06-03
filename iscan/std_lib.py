@@ -71,5 +71,8 @@ def filter_out_std_lib(orig_list: list) -> list:
 
     Args:
         orig_list: List of package names
+
+    Returns:
+        List of packages with modules in the standard library removed
     """
     return [i for i in orig_list if i not in STD_LIB]

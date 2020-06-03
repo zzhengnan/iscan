@@ -1,5 +1,5 @@
-# `iscan`: Scan your project for its dependencies
-Ever lost count of (or wondered) which packages your project depends on? `iscan` will give you a list of your project's direct dependencies.
+# `iscan`: Scan your project for third-party dependencies
+Ever wondered which third-party dependencies your project relies on? `iscan` will give you a list of packages that are imported in your project which are _not_ part of the [standard library](https://docs.python.org/3/library/index.html).
 
 ## Installation
 ```
@@ -7,7 +7,7 @@ $ pip install iscan
 ```
 
 ## Usage
-Specify the path to the directory you wish to scan; both absolute and relative paths are accepted.
+Specify the path to the directory you wish to scan. Both absolute and relative paths are accepted.
 ```
 $ iscan path/to/dir
 ```
@@ -18,16 +18,16 @@ $ iscan foo foo/tests
 ```
 
 ## Example output with `pandas`
-Running the utility on a local clone of the [`pandas` repo](https://github.com/pandas-dev/pandas) produces the following. These are all the packages `pandas` imports directly.
+Running the utility on a local clone of [pandas](https://github.com/pandas-dev/pandas) produces the following. These are all the packages `pandas` imports that are not part of the standard library.
 ```
-$ iscan ~/Desktop/pandas/
-Packages imported across all python files in pandas/
-['AppKit', 'Foundation', 'IPython', 'PyQt4', 'PyQt5', '__main__', '_csv', 'abc', 'array', 'ast', 'botocore', 'bs4', 'builtins', 'bz2', 'calendar', 'cftime', 'codecs', 'collections', 'contextlib', 'copy', 'csv', 'ctypes', 'cycler', 'dask', 'dataclasses', 'datetime', 'dateutil', 'decimal', 'distutils', 'email', 'errno', 'fastparquet', 'fractions', 'functools', 'gc', 'glob', 'gzip', 'hashlib', 'http', 'hypothesis', 'importlib', 'inspect', 'io', 'itertools', 'jedi', 'json', 'keyword', 'locale', 'logging', 'lxml', 'lzma', 'math', 'matplotlib', 'mmap', 'mpl_toolkits', 'multiprocessing', 'numba', 'numbers', 'numexpr', 'numpy', 'odf', 'openpyxl', 'operator', 'optparse', 'os', 'pandas', 'pathlib', 'pg8000', 'pickle', 'pkg_resources', 'platform', 'pprint', 'psycopg2', 'py', 'pyarrow', 'pydoc', 'pylab', 'pymysql', 'pytest', 'pytz', 'pyxlsb', 'qtpy', 'random', 're', 's3fs', 'scipy', 'shutil', 'sklearn', 'sqlalchemy', 'sqlite3', 'statsmodels', 'string', 'struct', 'subprocess', 'sys', 'tables', 'tarfile', 'tempfile', 'textwrap', 'threading', 'time', 'token', 'tokenize', 'types', 'typing', 'unicodedata', 'urllib', 'uuid', 'warnings', 'weakref', 'xarray', 'xlrd', 'xlsxwriter', 'xlwt', 'zipfile']
+$ iscan ~/Desktop/pandas/pandas/
+Third-party packages imported across all python files in /Users/zhengnan/Desktop/pandas/pandas/
+['AppKit', 'Foundation', 'IPython', 'PyQt4', 'PyQt5', '_csv', 'botocore', 'bs4', 'cftime', 'cycler', 'dask', 'dateutil', 'fastparquet', 'hypothesis', 'jedi', 'lxml', 'matplotlib', 'mpl_toolkits', 'numba', 'numexpr', 'numpy', 'odf', 'openpyxl', 'pandas', 'pg8000', 'pkg_resources', 'psycopg2', 'py', 'pyarrow', 'pylab', 'pymysql', 'pytest', 'pytz', 'pyxlsb', 'qtpy', 's3fs', 'scipy', 'sklearn', 'sqlalchemy', 'statsmodels', 'tables', 'xarray', 'xlrd', 'xlsxwriter', 'xlwt']
 ```
 
 If you are not interested in, say, packages imported during testing, you can specify the path to the tests directory for the entire directory to be ignored.
 ```
-$ iscan ~/Desktop/pandas/ ~/Desktop/pandas/tests/
-Packages imported across all python files in pandas/, EXCLUDING those in pandas/tests/
-['AppKit', 'Foundation', 'IPython', 'PyQt4', 'PyQt5', '__main__', '_csv', 'abc', 'array', 'ast', 'botocore', 'bs4', 'builtins', 'bz2', 'calendar', 'codecs', 'collections', 'contextlib', 'copy', 'csv', 'ctypes', 'cycler', 'dataclasses', 'datetime', 'dateutil', 'decimal', 'distutils', 'email', 'errno', 'fastparquet', 'fractions', 'functools', 'gc', 'glob', 'gzip', 'hashlib', 'http', 'hypothesis', 'importlib', 'inspect', 'io', 'itertools', 'jedi', 'json', 'keyword', 'locale', 'logging', 'lxml', 'lzma', 'math', 'matplotlib', 'mmap', 'mpl_toolkits', 'multiprocessing', 'numba', 'numbers', 'numexpr', 'numpy', 'odf', 'openpyxl', 'operator', 'optparse', 'os', 'pandas', 'pathlib', 'pg8000', 'pickle', 'pkg_resources', 'platform', 'pprint', 'psycopg2', 'py', 'pyarrow', 'pydoc', 'pylab', 'pymysql', 'pytest', 'pytz', 'pyxlsb', 'qtpy', 'random', 're', 's3fs', 'scipy', 'shutil', 'sqlalchemy', 'sqlite3', 'string', 'struct', 'subprocess', 'sys', 'tables', 'tarfile', 'tempfile', 'textwrap', 'threading', 'time', 'token', 'tokenize', 'types', 'typing', 'unicodedata', 'urllib', 'uuid', 'warnings', 'weakref', 'xarray', 'xlrd', 'xlsxwriter', 'xlwt', 'zipfile']
+$ iscan ~/Desktop/pandas/pandas/ ~/Desktop/pandas/pandas/tests/
+Third-party packages imported across all python files in /Users/zhengnan/Desktop/pandas/pandas/, EXCLUDING those in /Users/zhengnan/Desktop/pandas/pandas/tests/
+['AppKit', 'Foundation', 'IPython', 'PyQt4', 'PyQt5', '_csv', 'botocore', 'bs4', 'cycler', 'dateutil', 'fastparquet', 'hypothesis', 'jedi', 'lxml', 'matplotlib', 'mpl_toolkits', 'numba', 'numexpr', 'numpy', 'odf', 'openpyxl', 'pandas', 'pg8000', 'pkg_resources', 'psycopg2', 'py', 'pyarrow', 'pylab', 'pymysql', 'pytest', 'pytz', 'pyxlsb', 'qtpy', 's3fs', 'scipy', 'sqlalchemy', 'tables', 'xarray', 'xlrd', 'xlsxwriter', 'xlwt']
 ```
