@@ -1,11 +1,17 @@
 import setuptools
 
 
+with open('README.md', 'r') as f:
+    long_description = f.read()
+
+
 setuptools.setup(
     name='iscan',
     version='0.3.0',
     author='Zhengnan Zhao',
     description='iscan helps you identify your project\'s third-party dependencies',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://github.com/ZhengnanZhao/iscan',
     packages=setuptools.find_packages(),
     extras_require={
