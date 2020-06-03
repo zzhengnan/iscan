@@ -3,9 +3,9 @@ import setuptools
 
 setuptools.setup(
     name='iscan',
-    version='0.2.0',
+    version='0.3.0',
     author='Zhengnan Zhao',
-    description='iscan helps you identify your project\'s direct dependencies',
+    description='iscan helps you identify your project\'s third-party dependencies',
     url='https://github.com/ZhengnanZhao/iscan',
     packages=setuptools.find_packages(),
     extras_require={
