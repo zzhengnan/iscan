@@ -6,6 +6,8 @@ import sys
 from os import walk
 from os.path import abspath, join
 
+from iscan.std_lib import filter_out_std_lib
+
 
 class ImportScanner(ast.NodeVisitor):
     """Scanner to look for imported packages."""
@@ -124,8 +126,9 @@ def main():
         raise ValueError('You may pass either one or two arguments.')
 
     unique_imports = scan_directory(dir_to_scan, dir_to_exclude)
+    unique_imports = filter_out_std_lib(unique_imports)
     end = ', EXCLUDING those in {}\n'.format(dir_to_exclude) if dir_to_exclude else '\n'
-    print('Packages imported across all python files in {}'.format(dir_to_scan), end=end)
+    print('Third-party packages imported across all python files in {}'.format(dir_to_scan), end=end)
     print(unique_imports)
 
 
