@@ -1,21 +1,32 @@
+import re
+from pathlib import Path
+
 import setuptools
 
 
+PATH_TO_INIT = Path('iscan') / '__init__.py'
+VERSION = re.search(
+    r'(\'.+?\')',
+    PATH_TO_INIT.read_text()
+).groups()[0]
+
+
 with open('README.md', 'r') as f:
-    long_description = f.read()
+    LONG_DESCRIPTION = f.read()
 
 
 setuptools.setup(
     name='iscan',
-    version='0.3.0',
+    version=VERSION,
     author='Zhengnan Zhao',
     description='iscan helps you identify your project\'s third-party dependencies',
-    long_description=long_description,
+    long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
     url='https://github.com/ZhengnanZhao/iscan',
     packages=setuptools.find_packages(),
     extras_require={
-        'dev': ['pytest', 'setuptools', 'twine', 'wheel']
+        'build': ['setuptools', 'twine', 'wheel']
+        'dev': ['pytest']
     },
     entry_points={'console_scripts': ['iscan=iscan.scan:main']},
     classifiers=[
