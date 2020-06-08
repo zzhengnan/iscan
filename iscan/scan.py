@@ -1,6 +1,7 @@
 """This module provides functionality to scan a directory and aggregate
 the names of packages imported across all python files in said directory.
 """
+import argparse
 import ast
 import sys
 from os import walk
@@ -116,14 +117,28 @@ def scan_directory(dir_to_scan: str, dir_to_exclude: str) -> list:
     return sorted(set(map(get_base_name, all_imports)))
 
 
+def cli() -> argparse.Namespace:
+    """Command line interface."""
+    parser = argparse.ArgumentParser(
+        allow_abbrev=False,
+        description='Scan python files in a given directory for third-party dependencies.'
+    )
+    parser.add_argument(
+        'DIR_TO_SCAN',
+        help='target directory to scan'
+    )
+    parser.add_argument(
+        '-x',
+        default=None,
+        dest='DIR_TO_EXCLUDE',
+        help='directory to exclude during scanning'
+    )
+    return parser.parse_args()
+
+
 def main():
-    args = sys.argv[1:]
-    if len(args) == 1:
-        dir_to_scan, dir_to_exclude = args[0], None
-    elif len(args) == 2:
-        dir_to_scan, dir_to_exclude = args
-    else:
-        raise ValueError('You may pass either one or two arguments.')
+    args = cli()
+    dir_to_scan, dir_to_exclude = args.DIR_TO_SCAN, args.DIR_TO_EXCLUDE
 
     unique_imports = scan_directory(dir_to_scan, dir_to_exclude)
     unique_imports = filter_out_std_lib(unique_imports)
