@@ -25,7 +25,7 @@ setuptools.setup(
     url='https://github.com/ZhengnanZhao/iscan',
     packages=setuptools.find_packages(),
     extras_require={
-        'build': ['setuptools', 'twine', 'wheel']
+        'build': ['setuptools', 'twine', 'wheel'],
         'dev': ['pytest']
     },
     entry_points={'console_scripts': ['iscan=iscan.scan:main']},
