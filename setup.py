@@ -6,7 +6,7 @@ import setuptools
 
 PATH_TO_INIT = Path('iscan') / '__init__.py'
 VERSION = re.search(
-    r'(\'.+?\')',
+    r'\'(.+?)\'',
     PATH_TO_INIT.read_text()
 ).groups()[0]
 
