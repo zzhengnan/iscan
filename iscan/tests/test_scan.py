@@ -38,7 +38,7 @@ def test_convert_source_to_tree():
 
 
 @pytest.mark.parametrize('dir_to_exclude, expected', [
-    (None, ['datetime', 'matplotlib', 'numpy', 'os', 'pandas', 'shutil', 'time']),
+    (None, ['ctypes', 'datetime', 'matplotlib', 'numpy', 'os', 'pandas', 'shutil', 'time']),
     (join(CURRENT_DIR, 'test_package', 'city'), ['matplotlib', 'numpy', 'os', 'pandas', 'shutil', 'time'])
 ])
 def test_scan_directory(dir_to_exclude, expected):
