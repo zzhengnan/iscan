@@ -97,7 +97,7 @@ def scan_directory(dir_to_scan: str, dir_to_exclude: str) -> list:
     for root_dir, _, fnames in walk(top=dir_to_scan):
         # Skip excluded directory
         if dir_to_exclude is not None:
-            if abspath(root_dir) == abspath(dir_to_exclude):
+            if abspath(dir_to_exclude) in abspath(root_dir):
                 continue
 
         for fname in fnames:

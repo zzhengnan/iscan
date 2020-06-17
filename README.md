@@ -37,7 +37,7 @@ optional arguments:
 ```
 
 ## Example output with `pandas`
-Running the utility on a local clone of [pandas](https://github.com/pandas-dev/pandas) produces the following. These are all the packages `pandas` imports that are not part of the standard library.
+Running the utility on a local clone of `pandas` as of [this commit](https://github.com/pandas-dev/pandas/tree/6eb34f1ba) produces the following. These are all the packages `pandas` imports that are not part of the standard library.
 ```
 $ iscan ~/Desktop/pandas/pandas/
 Third-party packages imported across all python files in /Users/zhengnan/Desktop/pandas/pandas/
@@ -48,5 +48,5 @@ If you are not interested in, say, packages imported during testing, you can spe
 ```
 $ iscan ~/Desktop/pandas/pandas/ -x ~/Desktop/pandas/pandas/tests/
 Third-party packages imported across all python files in /Users/zhengnan/Desktop/pandas/pandas/, EXCLUDING those in /Users/zhengnan/Desktop/pandas/pandas/tests/
-['AppKit', 'Foundation', 'IPython', 'PyQt4', 'PyQt5', '_csv', 'botocore', 'bs4', 'cycler', 'dateutil', 'fastparquet', 'hypothesis', 'jedi', 'lxml', 'matplotlib', 'mpl_toolkits', 'numba', 'numexpr', 'numpy', 'odf', 'openpyxl', 'pandas', 'pg8000', 'pkg_resources', 'psycopg2', 'py', 'pyarrow', 'pylab', 'pymysql', 'pytest', 'pytz', 'pyxlsb', 'qtpy', 's3fs', 'scipy', 'sqlalchemy', 'tables', 'xarray', 'xlrd', 'xlsxwriter', 'xlwt']
+['AppKit', 'Foundation', 'IPython', 'PyQt4', 'PyQt5', 'botocore', 'bs4', 'dateutil', 'hypothesis', 'lxml', 'matplotlib', 'numexpr', 'numpy', 'odf', 'openpyxl', 'pandas', 'pkg_resources', 'pyarrow', 'pytest', 'pytz', 'pyxlsb', 'qtpy', 's3fs', 'scipy', 'sqlalchemy', 'tables', 'xlrd', 'xlsxwriter', 'xlwt']
 ```
