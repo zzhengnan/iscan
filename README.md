@@ -1,4 +1,7 @@
 # `iscan`: Scan your project for third-party dependencies
+
+[![Build Status](https://zzhao212.visualstudio.com/iscan/_apis/build/status/ZhengnanZhao.iscan?branchName=master)](https://zzhao212.visualstudio.com/iscan/_build/latest?definitionId=1&branchName=master)
+
 Ever wondered which third-party dependencies your project relies on? `iscan` will give you a list of packages that are imported in your project which are _not_ part of the [standard library](https://docs.python.org/3/library/index.html).
 
 ## Installation
