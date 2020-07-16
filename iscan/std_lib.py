@@ -1,4 +1,5 @@
-"""Modules in the standard library, scraped from https://docs.python.org/3/py-modindex.html with the following code.
+"""Modules in the standard library, scraped from https://docs.python.org/3/py-modindex.html
+with the following code.
 
 ```
 import requests

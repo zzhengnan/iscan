@@ -3,19 +3,19 @@ import sys
 from os import environ
 from os.path import walk
 
-from .utils import foo
-from ..parentutils import bar
 from ..grandparentutils import baz
+from ..parentutils import bar
+from .utils import foo
 
 
-def foo():
+def fuzz():
     try:
         import logging
-    except:
+    except ImportError:
         raise
 
 
-def bar():
+def buzz():
     """import pandas as pd"""
     # import numpy as np
     print("import time")

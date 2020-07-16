@@ -1,3 +1,3 @@
-from .utils import foo
-from ..parentutils import bar
 from ..grandparentutils import baz
+from ..parentutils import bar
+from .utils import foo

@@ -3,5 +3,5 @@ def baz_func():
     from .utils import nothing
     try:
         from os.path import join
-    except:
+    except ImportError:
         pass

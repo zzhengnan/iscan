@@ -3,7 +3,6 @@ the names of packages imported across all python files in said directory.
 """
 import argparse
 import ast
-import sys
 from os import walk
 from os.path import abspath, join
 
@@ -143,7 +142,10 @@ def main():
     unique_imports = scan_directory(dir_to_scan, dir_to_exclude)
     unique_imports = filter_out_std_lib(unique_imports)
     end = ', EXCLUDING those in {}\n'.format(dir_to_exclude) if dir_to_exclude else '\n'
-    print('Third-party packages imported across all python files in {}'.format(dir_to_scan), end=end)
+    print(
+        'Third-party packages imported across all python files in {}'.format(dir_to_scan),
+        end=end
+    )
     print(unique_imports)
 
 

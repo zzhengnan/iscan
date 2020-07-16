@@ -7,7 +7,7 @@ from os.path import walk
 def foo():
     try:
         import logging
-    except:
+    except ImportError:
         raise
 
 

@@ -2,7 +2,7 @@ from os.path import abspath, dirname, join
 
 import pytest
 
-from iscan.scan import ImportScanner, get_base_name, convert_source_to_tree, scan_directory
+from iscan.scan import ImportScanner, convert_source_to_tree, get_base_name, scan_directory  # isort:skip # noqa: E501
 
 
 CURRENT_DIR = abspath(dirname(__file__))
@@ -39,7 +39,7 @@ def test_convert_source_to_tree():
 
 @pytest.mark.parametrize('dir_to_exclude, expected', [
     (None, ['ctypes', 'datetime', 'matplotlib', 'numpy', 'os', 'pandas', 'shutil', 'time']),
-    (join(CURRENT_DIR, 'test_package', 'city'), ['matplotlib', 'numpy', 'os', 'pandas', 'shutil', 'time'])
+    (join(CURRENT_DIR, 'test_package', 'city'), ['matplotlib', 'numpy', 'os', 'pandas', 'shutil', 'time'])  # noqa: E501
 ])
 def test_scan_directory(dir_to_exclude, expected):
     dir_to_scan = join(CURRENT_DIR, 'test_package')
