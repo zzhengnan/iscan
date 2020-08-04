@@ -3,12 +3,7 @@ from pathlib import Path
 
 import setuptools
 
-
-PATH_TO_INIT = Path('iscan') / '__init__.py'
-VERSION = re.search(
-    r'\'(.+?)\'',
-    PATH_TO_INIT.read_text()
-).groups()[0]
+from iscan import __version__ as VERSION
 
 
 with open('README.md', 'r') as f:
