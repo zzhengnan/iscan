@@ -3,7 +3,7 @@ from pathlib import Path
 
 import setuptools
 
-from iscan import __version__ as VERSION
+import iscan
 
 
 with open('README.md', 'r') as f:
@@ -12,7 +12,7 @@ with open('README.md', 'r') as f:
 
 setuptools.setup(
     name='iscan',
-    version=VERSION,
+    version=iscan.__version__,
     author='Zhengnan Zhao',
     description='iscan helps you identify your project\'s third-party dependencies',
     long_description=LONG_DESCRIPTION,
