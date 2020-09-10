@@ -5,7 +5,9 @@
 Ever wondered which third-party dependencies your project relies on? `iscan` will give you a list of packages that are imported in your project which are _not_ part of the [standard library](https://docs.python.org/3/library/index.html).
 
 ## Installation
+`iscan` can be installed with either conda or pip.
 ```
+$ conda install iscan -c conda-forge
 $ pip install iscan
 ```
 
