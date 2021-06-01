@@ -120,7 +120,7 @@ def cli() -> argparse.Namespace:
     """Command line interface."""
     parser = argparse.ArgumentParser(
         allow_abbrev=False,
-        description='Scan python files in a given directory for third-party dependencies.'
+        description='Look for packages imported across all python files in a given directory.'
     )
     parser.add_argument(
         'DIR_TO_SCAN',
@@ -131,6 +131,14 @@ def cli() -> argparse.Namespace:
         default=None,
         dest='DIR_TO_EXCLUDE',
         help='directory to exclude during scanning'
+    )
+    parser.add_argument(
+        '--ignore-std-lib',
+        dest='IGNORE_STD_LIB',
+        action='store_const',
+        const=True,
+        default=False,
+        help='whether to omit modules from the standard library'
     )
     return parser.parse_args()
 
