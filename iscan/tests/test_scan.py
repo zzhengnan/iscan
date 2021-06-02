@@ -2,7 +2,8 @@ from os.path import abspath, dirname, join
 
 import pytest
 
-from iscan.scan import ImportScanner, convert_source_to_tree, get_base_name, scan_directory  # isort:skip # noqa: E501
+from iscan.scan import (ImportScanner, convert_source_to_tree, get_base_name,
+                        scan_directory)
 
 
 CURRENT_DIR = abspath(dirname(__file__))

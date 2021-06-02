@@ -13,7 +13,7 @@ EXTRAS_REQUIRE = {
     'test': ['pytest'],
     'util': ['beautifulsoup4', 'requests']  # To scrape modules from the standard library
 }
-EXTRAS_REQUIRE['dev'] = EXTRAS_REQUIRE['build'] + EXTRAS_REQUIRE['qa'] + EXTRAS_REQUIRE['test'] + EXTRAS_REQUIRE['util']  # noqa: E501
+EXTRAS_REQUIRE['dev'] = EXTRAS_REQUIRE['build'] + EXTRAS_REQUIRE['qa'] + EXTRAS_REQUIRE['test'] + EXTRAS_REQUIRE['util']
 
 
 setuptools.setup(
