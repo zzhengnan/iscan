@@ -110,7 +110,7 @@ def get_base_name(full_name: str) -> str:
     return full_name.split('.')[0]
 
 
-def get_unique_baes_packages(packages: list) -> list:
+def get_unique_base_packages(packages: list) -> list:
     """Remove duplicates and extract the base package names.
 
     Args:
@@ -169,7 +169,7 @@ def main():
     args = cli()
 
     all_imports = scan_directory(args.DIR_TO_SCAN, args.DIR_TO_EXCLUDE)
-    unique_imports = get_unique_baes_packages(all_imports)
+    unique_imports = get_unique_base_packages(all_imports)
     third_party, std_lib = separate_third_party_from_std_lib(unique_imports)
 
     print(
