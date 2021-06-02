@@ -26,11 +26,9 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     packages=setuptools.find_packages(),
     entry_points={'console_scripts': ['iscan=iscan.scan:main']},
-    python_requires='>=3.5',
+    python_requires='>=3.7',
     extras_require=EXTRAS_REQUIRE,
     classifiers=[
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
