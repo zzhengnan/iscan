@@ -1,4 +1,4 @@
-"""Utilities to scan all python files in a directory and
+"""Utilities to scan all Python files in a directory and
 aggregate the names of all the imported packages
 """
 import argparse
@@ -55,7 +55,7 @@ def convert_source_to_tree(fpath: str) -> ast.Module:
     """Convert source code into abstract syntax tree.
 
     Args:
-        fpath: Path to the python file of interest
+        fpath: Path to the Python file of interest
 
     Returns:
         AST representation of the source code
@@ -66,7 +66,7 @@ def convert_source_to_tree(fpath: str) -> ast.Module:
 
 
 def scan_directory(dir_to_scan: str, dir_to_exclude: str) -> list:
-    """Extract packages imported across all python files in a directory.
+    """Extract packages imported across all Python files in a directory.
 
     Args:
         dir_to_scan: Path to the directory of interest
@@ -82,7 +82,7 @@ def scan_directory(dir_to_scan: str, dir_to_exclude: str) -> list:
                 continue
 
         for fname in fnames:
-            # Skip non-python files
+            # Skip non-Python files
             if not fname.endswith('.py'):
                 continue
 
@@ -134,7 +134,7 @@ def show_result(third_party: list, std_lib: list, ignore_std_lib: bool) -> None:
     print('\n  - '.join(third_party))
 
     if std_lib and not ignore_std_lib:
-        print('\nModules from the standard library:\n  - ', end='')
+        print('\nStandard library modules:\n  - ', end='')
         print('\n  - '.join(std_lib))
 
 
@@ -142,7 +142,7 @@ def cli() -> argparse.Namespace:
     """Command line interface."""
     parser = argparse.ArgumentParser(
         allow_abbrev=False,
-        description='Look for packages imported across all python files in a given directory.'
+        description='Look for packages imported across all Python files in a given directory.'
     )
     parser.add_argument(
         'DIR_TO_SCAN',
@@ -160,7 +160,7 @@ def cli() -> argparse.Namespace:
         action='store_const',
         const=True,
         default=False,
-        help='whether to omit modules from the standard library'
+        help='whether to omit standard library modules'
     )
     return parser.parse_args()
 
@@ -173,7 +173,7 @@ def main():
     third_party, std_lib = separate_third_party_from_std_lib(unique_imports)
 
     print(
-        f'Packages imported across all python files in directory "{args.DIR_TO_SCAN}"',
+        f'Packages imported across all Python files in directory "{args.DIR_TO_SCAN}"',
         end=f', excluding "{args.DIR_TO_EXCLUDE}"\n' if args.DIR_TO_EXCLUDE else '\n'
     )
 

@@ -11,7 +11,7 @@ EXTRAS_REQUIRE = {
     'build': ['setuptools', 'twine', 'wheel'],
     'qa': ['flake8', 'isort', 'mypy', 'pre-commit'],
     'test': ['coverage', 'pytest'],
-    'util': ['beautifulsoup4', 'requests']  # To scrape modules from the standard library
+    'util': ['beautifulsoup4', 'requests']  # To scrape standard library modules
 }
 EXTRAS_REQUIRE['dev'] = EXTRAS_REQUIRE['build'] + EXTRAS_REQUIRE['qa'] + EXTRAS_REQUIRE['test'] + EXTRAS_REQUIRE['util']
 
@@ -21,7 +21,7 @@ setuptools.setup(
     version=iscan.__version__,
     url='https://github.com/zzhengnan/iscan',
     author='Zhengnan Zhao',
-    description='iscan helps you identify your project\'s third-party dependencies',
+    description="iscan helps you identify your project's dependencies",
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
     packages=setuptools.find_packages(),

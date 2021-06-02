@@ -1,5 +1,5 @@
 """Modules in the standard library."""
-# Modules that come with the standard library in python 2.7
+# Modules that come with the standard library in Python 2.7
 STD_LIB_27 = [
     '__builtin__', '__future__', '__main__', '_winreg',
     'abc', 'aepack', 'aetools', 'aetypes', 'aifc', 'al', 'AL', 'anydbm', 'applesingle', 'argparse', 'array', 'ast', 'asynchat', 'asyncore', 'atexit', 'audioop', 'autoGIL',
@@ -29,7 +29,7 @@ STD_LIB_27 = [
     'zipfile', 'zipimport', 'zlib'
 ]
 
-# New modules introduced in python 3.5+
+# New modules introduced in Python 3.5+
 STD_LIB_35 = [
     '_dummy_thread', '_thread',
     'asyncio', 'builtins', 'concurrent', 'configparser', 'copyreg', 'enum', 'faulthandler',
@@ -64,7 +64,7 @@ def separate_third_party_from_std_lib(packages: list) -> tuple:
 
 
 def get_std_lib(version: str) -> list:
-    """Scrape modules in the standard library for a given python version.
+    """Scrape modules in the standard library for a given Python version.
 
     Args:
         url: List of package names
