@@ -2,7 +2,8 @@ from os.path import abspath, dirname, join
 
 import pytest
 
-from iscan.scan import ImportScanner, convert_source_to_tree, get_base_name, scan_directory  # isort:skip # noqa: E501
+from iscan.scan import (ImportScanner, convert_source_to_tree, get_base_name,
+                        get_unique_base_packages, scan_directory)
 
 
 CURRENT_DIR = abspath(dirname(__file__))
@@ -21,6 +22,15 @@ def test_import_scanner(module_name, expected):
     assert scanner.get_imports() == expected
 
 
+@pytest.mark.parametrize('dir_to_exclude, expected', [
+    (None, ['ctypes', 'datetime', 'matplotlib.pyplot', 'numpy', 'os.path', 'pandas', 'shutil', 'time']),
+    (join(CURRENT_DIR, 'test_package', 'city'), ['matplotlib.pyplot', 'numpy', 'os.path', 'pandas', 'shutil', 'time'])
+])
+def test_scan_directory(dir_to_exclude, expected):
+    dir_to_scan = join(CURRENT_DIR, 'test_package')
+    assert sorted(scan_directory(dir_to_scan, dir_to_exclude)) == expected
+
+
 @pytest.mark.parametrize('full_name, expected', [
     ('foo', 'foo'),
     ('foo.bar', 'foo'),
@@ -31,16 +41,11 @@ def test_get_base_name(full_name, expected):
     assert get_base_name(full_name) == expected
 
 
-def test_convert_source_to_tree():
-    # This function doesn't do anything other than converting source code into its
-    # AST representation using the ast module. No need to test
-    assert True
-
-
-@pytest.mark.parametrize('dir_to_exclude, expected', [
-    (None, ['ctypes', 'datetime', 'matplotlib', 'numpy', 'os', 'pandas', 'shutil', 'time']),
-    (join(CURRENT_DIR, 'test_package', 'city'), ['matplotlib', 'numpy', 'os', 'pandas', 'shutil', 'time'])  # noqa: E501
+@pytest.mark.parametrize('packages, expected', [
+    (['foo', 'foo.bar'], ['foo']),
+    (['foo.bar', 'bar.foo'], ['bar', 'foo']),
+    (['foo', 'bar'], ['bar', 'foo']),
+    (['foo_bar_baz.batman'], ['foo_bar_baz'])
 ])
-def test_scan_directory(dir_to_exclude, expected):
-    dir_to_scan = join(CURRENT_DIR, 'test_package')
-    assert scan_directory(dir_to_scan, dir_to_exclude) == expected
+def test_get_unique_base_packages(packages, expected):
+    assert get_unique_base_packages(packages) == expected

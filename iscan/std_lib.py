@@ -1,28 +1,5 @@
-"""Modules in the standard library, scraped from https://docs.python.org/3/py-modindex.html
-with the following code.
-
-```
-import requests
-from bs4 import BeautifulSoup
-
-def extract_std_lib(url):
-    resp = requests.get(url)
-    resp.raise_for_status()
-    soup = BeautifulSoup(resp.text, 'html.parser')
-    std_lib = [link.text for link in soup.find('table').find_all('a', href=True)]
-    std_lib = [module.split('.')[0] for module in std_lib]
-    return sorted(set(std_lib))
-
-url = 'https://docs.python.org/{version}/py-modindex.html'
-cumulative = []
-for version in ['2.7', '3.5', '3.6', '3.7', '3.8']:
-    std_lib = extract_std_lib(url.format(version=version))
-    print('\nNew additions in {}'.format(version))
-    print([module for module in std_lib if module not in cumulative])
-    cumulative.extend(std_lib)
-```
-"""
-# Modules that come with the standard library in python 2.7
+"""Modules in the standard library."""
+# Modules that come with the standard library in Python 2.7
 STD_LIB_27 = [
     '__builtin__', '__future__', '__main__', '_winreg',
     'abc', 'aepack', 'aetools', 'aetypes', 'aifc', 'al', 'AL', 'anydbm', 'applesingle', 'argparse', 'array', 'ast', 'asynchat', 'asyncore', 'atexit', 'audioop', 'autoGIL',
@@ -52,7 +29,7 @@ STD_LIB_27 = [
     'zipfile', 'zipimport', 'zlib'
 ]
 
-# New modules introduced in python 3.5+
+# New modules introduced in Python 3.5+
 STD_LIB_35 = [
     '_dummy_thread', '_thread',
     'asyncio', 'builtins', 'concurrent', 'configparser', 'copyreg', 'enum', 'faulthandler',
@@ -63,17 +40,57 @@ STD_LIB_35 = [
 STD_LIB_36 = ['secrets']
 STD_LIB_37 = ['contextvars', 'dataclasses']
 STD_LIB_38 = []
+STD_LIB_39 = ['graphlib', 'zoneinfo']
 
-STD_LIB = STD_LIB_27 + STD_LIB_35 + STD_LIB_36 + STD_LIB_37 + STD_LIB_38
+STD_LIB = STD_LIB_27 + STD_LIB_35 + STD_LIB_36 + STD_LIB_37 + STD_LIB_38 + STD_LIB_39
 
 
-def filter_out_std_lib(orig_list: list) -> list:
-    """Remove modules in the standard library from the given list.
+def separate_third_party_from_std_lib(packages: list) -> tuple:
+    """Separate third-party packages from standard library modules.
 
     Args:
-        orig_list: List of package names
+        packages: List of package names
 
     Returns:
-        List of packages with modules in the standard library removed
+        Third-party packages, standard library modules
     """
-    return [i for i in orig_list if i not in STD_LIB]
+    third_party, std_lib = [], []
+    for package in packages:
+        if package in STD_LIB:
+            std_lib.append(package)
+        else:
+            third_party.append(package)
+    return third_party, std_lib
+
+
+def get_std_lib(version: str) -> list:
+    """Scrape modules in the standard library for a given Python version.
+
+    Args:
+        url: List of package names
+
+    Returns:
+        Third-party packages, standard library modules
+    """
+    import requests
+    from bs4 import BeautifulSoup
+
+    url = f'https://docs.python.org/{version}/py-modindex.html'
+    resp = requests.get(url)
+    resp.raise_for_status()
+
+    soup = BeautifulSoup(resp.text, 'html.parser')
+    links = soup.find('table').find_all('a', href=True)
+    std_lib = [link.text.split('.')[0] for link in links]
+
+    return sorted(set(std_lib))
+
+
+if __name__ == '__main__':
+    versions = ['2.7', '3.5', '3.6', '3.7', '3.8', '3.9']
+    cumulative = []
+    for version in versions:
+        std_lib = get_std_lib(version)
+        print(f'\nNew additions in {version}')
+        print([module for module in std_lib if module not in cumulative])
+        cumulative.extend(std_lib)
