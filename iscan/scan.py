@@ -4,16 +4,17 @@ aggregate the names of all the imported packages
 import argparse
 import ast
 import os
+from typing import Iterable, List
 
 from iscan.std_lib import separate_third_party_from_std_lib
 
 
 class ImportScanner(ast.NodeVisitor):
     """Scanner to look for imported packages."""
-    def __init__(self):
-        self.imports = []
+    def __init__(self) -> None:
+        self.imports = []  # type: ignore
 
-    def visit_Import(self, node):
+    def visit_Import(self, node: ast.Import) -> None:
         """Extract imports of the form `import foo`.
 
         >>> import_statement = 'import os.path.join as jn, datetime.datetime as dt'
@@ -27,7 +28,7 @@ class ImportScanner(ast.NodeVisitor):
             self.imports.append(alias.name)
         self.generic_visit(node)
 
-    def visit_ImportFrom(self, node):
+    def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
         """Extract imports of the form `from foo import bar`.
 
         Relative imports such as `from ..utils import foo` will be ignored.
@@ -47,7 +48,7 @@ class ImportScanner(ast.NodeVisitor):
             self.imports.append(node.module)
         self.generic_visit(node)
 
-    def get_imports(self):
+    def get_imports(self) -> List[str]:
         return sorted(self.imports)
 
 
@@ -65,7 +66,7 @@ def convert_source_to_tree(fpath: str) -> ast.Module:
     return tree
 
 
-def scan_directory(dir_to_scan: str, dir_to_exclude: str) -> list:
+def scan_directory(dir_to_scan: str, dir_to_exclude: str) -> List[str]:
     """Extract packages imported across all Python files in a directory.
 
     Args:
@@ -110,7 +111,7 @@ def get_base_name(full_name: str) -> str:
     return full_name.split('.')[0]
 
 
-def get_unique_base_packages(packages: list) -> list:
+def get_unique_base_packages(packages: Iterable[str]) -> List[str]:
     """Remove duplicates and extract the base package names.
 
     Args:
@@ -122,7 +123,7 @@ def get_unique_base_packages(packages: list) -> list:
     return sorted(set(map(get_base_name, packages)))
 
 
-def show_result(third_party: list, std_lib: list, ignore_std_lib: bool) -> None:
+def show_result(third_party: Iterable[str], std_lib: Iterable[str], ignore_std_lib: bool) -> None:
     """Print the result of running iscan.
 
     Args:
@@ -165,7 +166,7 @@ def cli() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
     args = cli()
 
     all_imports = scan_directory(args.DIR_TO_SCAN, args.DIR_TO_EXCLUDE)

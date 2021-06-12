@@ -9,8 +9,8 @@ with open('README.md', 'r') as f:
 
 EXTRAS_REQUIRE = {
     'build': ['setuptools', 'twine', 'wheel'],
-    'qa': ['flake8', 'isort', 'mypy', 'pre-commit'],
-    'test': ['coverage', 'pytest'],
+    'qa': ['flake8', 'isort', 'pre-commit'],
+    'test': ['coverage', 'mypy', 'pytest'],
     'util': ['beautifulsoup4', 'requests']  # To scrape standard library modules
 }
 EXTRAS_REQUIRE['dev'] = EXTRAS_REQUIRE['build'] + EXTRAS_REQUIRE['qa'] + EXTRAS_REQUIRE['test'] + EXTRAS_REQUIRE['util']
