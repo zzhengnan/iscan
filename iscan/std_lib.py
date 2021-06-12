@@ -75,7 +75,7 @@ def get_std_lib(version: str) -> List[str]:
     Returns:
         Third-party packages, standard library modules
     """
-    import requests
+    import requests  # type: ignore
     from bs4 import BeautifulSoup  # type: ignore
 
     url = f'https://docs.python.org/{version}/py-modindex.html'
