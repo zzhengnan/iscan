@@ -1,4 +1,7 @@
 """Modules in the standard library."""
+from typing import Iterable, List, Tuple
+
+
 # Modules that come with the standard library in Python 2.7
 STD_LIB_27 = [
     '__builtin__', '__future__', '__main__', '_winreg',
@@ -39,13 +42,13 @@ STD_LIB_35 = [
 ]
 STD_LIB_36 = ['secrets']
 STD_LIB_37 = ['contextvars', 'dataclasses']
-STD_LIB_38 = []
+STD_LIB_38 = []  # type: ignore
 STD_LIB_39 = ['graphlib', 'zoneinfo']
 
 STD_LIB = STD_LIB_27 + STD_LIB_35 + STD_LIB_36 + STD_LIB_37 + STD_LIB_38 + STD_LIB_39
 
 
-def separate_third_party_from_std_lib(packages: list) -> tuple:
+def separate_third_party_from_std_lib(packages: Iterable[str]) -> Tuple[List[str], List[str]]:
     """Separate third-party packages from standard library modules.
 
     Args:
@@ -63,7 +66,7 @@ def separate_third_party_from_std_lib(packages: list) -> tuple:
     return third_party, std_lib
 
 
-def get_std_lib(version: str) -> list:
+def get_std_lib(version: str) -> List[str]:
     """Scrape modules in the standard library for a given Python version.
 
     Args:
@@ -72,8 +75,8 @@ def get_std_lib(version: str) -> list:
     Returns:
         Third-party packages, standard library modules
     """
-    import requests
-    from bs4 import BeautifulSoup
+    import requests  # type: ignore
+    from bs4 import BeautifulSoup  # type: ignore
 
     url = f'https://docs.python.org/{version}/py-modindex.html'
     resp = requests.get(url)
