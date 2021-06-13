@@ -3,7 +3,7 @@ from os.path import abspath, dirname, join
 import pytest
 
 from iscan.scan import (ImportScanner, convert_source_to_tree, get_base_name,
-                        get_unique_base_packages, scan_directory)
+                        get_unique_base_packages, run, scan_directory)
 
 
 CURRENT_DIR = abspath(dirname(__file__))
@@ -49,3 +49,18 @@ def test_get_base_name(full_name, expected):
 ])
 def test_get_unique_base_packages(packages, expected):
     assert get_unique_base_packages(packages) == expected
+
+
+@pytest.mark.parametrize('dir_to_exclude, expected', [
+    (None, {
+        'third_party': ['matplotlib', 'numpy', 'pandas'],
+        'std_lib': ['ctypes', 'datetime', 'os', 'shutil', 'time']
+    }),
+    (join(CURRENT_DIR, 'test_package', 'city'), {
+        'third_party': ['matplotlib', 'numpy', 'pandas'],
+        'std_lib': ['os', 'shutil', 'time']
+    })
+])
+def test_run(dir_to_exclude, expected):
+    dir_to_scan = join(CURRENT_DIR, 'test_package')
+    assert run(dir_to_scan, dir_to_exclude) == expected

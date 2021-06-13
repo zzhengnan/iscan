@@ -4,7 +4,7 @@ aggregate the names of all the imported packages
 import argparse
 import ast
 import os
-from typing import Iterable, List
+from typing import Dict, Iterable, List, Optional
 
 from iscan.std_lib import separate_third_party_from_std_lib
 
@@ -123,20 +123,37 @@ def get_unique_base_packages(packages: Iterable[str]) -> List[str]:
     return sorted(set(map(get_base_name, packages)))
 
 
-def show_result(third_party: Iterable[str], std_lib: Iterable[str], ignore_std_lib: bool) -> None:
+def show_result(result: Dict[str, List[str]], ignore_std_lib: bool) -> None:
     """Print the result of running iscan.
 
     Args:
-        third_party: List of third-party packages
-        std_lib: List of standard library modules
+        result: Imported third-party packages and standard library modules
         ignore_std_lib: Whether to omit standard library modules in the output
     """
+    third_party, std_lib = result['third_party'], result['std_lib']
+
     print('\nThird-party packages:\n  - ', end='')
     print('\n  - '.join(third_party))
 
     if std_lib and not ignore_std_lib:
         print('\nStandard library modules:\n  - ', end='')
         print('\n  - '.join(std_lib))
+
+
+def run(dir_to_scan: str, dir_to_exclude: Optional[str] = None) -> Dict[str, List[str]]:
+    """Run iscan for a given set of parameters.
+
+    Args:
+        dir_to_scan: Path to the directory of interest
+        dir_to_exclude: Path to the directory to be excluded during scanning
+
+    Returns:
+        Third-party packages and standard library modules
+    """
+    all_imports = scan_directory(dir_to_scan, dir_to_exclude)
+    unique_imports = get_unique_base_packages(all_imports)
+    third_party, std_lib = separate_third_party_from_std_lib(unique_imports)
+    return dict(third_party=third_party, std_lib=std_lib)
 
 
 def cli() -> argparse.Namespace:
@@ -168,14 +185,11 @@ def cli() -> argparse.Namespace:
 
 def main() -> None:
     args = cli()
-
-    all_imports = scan_directory(args.DIR_TO_SCAN, args.DIR_TO_EXCLUDE)
-    unique_imports = get_unique_base_packages(all_imports)
-    third_party, std_lib = separate_third_party_from_std_lib(unique_imports)
+    result = run(args.DIR_TO_SCAN, args.DIR_TO_EXCLUDE)
 
     print(
         f'Packages imported across all Python files in directory "{args.DIR_TO_SCAN}"',
         end=f', excluding "{args.DIR_TO_EXCLUDE}"\n' if args.DIR_TO_EXCLUDE else '\n'
     )
 
-    show_result(third_party, std_lib, args.IGNORE_STD_LIB)
+    show_result(result, args.IGNORE_STD_LIB)
