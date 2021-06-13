@@ -9,17 +9,21 @@
 
 Ever wondered which dependencies your Python project relies on?
 
-`iscan` gives you a clear view of all the third-party packages imported by your project, along with modules in the standard library.
+`iscan` gives you a clear view of all the third-party packages and standard library modules imported by your project
 
-- [Example](#Example)
-- [Installation](#Installation)
-- [Dependencies](#Dependencies)
-- [Usage](#Usage)
+- [1. Quick start](#1.-Quick-start)
+- [2. Installation](#2.-Installation)
+- [3. Dependencies](#3.-Dependencies)
+- [4. Usage](#4.-Usage)
+    - [4.1 Command line interface](#4.1-Command-line-interface)
+    - [4.2 Python API](#4.2-Python-API)
 
-## Example
-Running `iscan` on a local clone of the popular HTTP library [requests](https://github.com/psf/requests/tree/v2.25.1) gives the following results -- these are all the third-party packages and standard library modules `requests` relies on.
+## 1. Quick start
+Simply provide the path to your project. That's it!
+
+Here's an example of running `iscan` on a local clone of the popular HTTP library [requests](https://github.com/psf/requests/tree/v2.25.1). These are all the third-party packages and standard library modules `requests` relies on.
 ```
-$ iscan ./requests/  # From the top level of the requests repo
+$ iscan ./requests/  # Executed at the top level of the requests repo
 Packages imported across all Python files in directory "./requests/"
 
 Third-party packages:
@@ -42,17 +46,20 @@ Standard library modules:
   ...
 ```
 
-## Installation
+## 2. Installation
 `iscan` can be installed with either conda or pip.
 ```
 $ conda install iscan -c conda-forge
 $ python -m pip install iscan
 ```
 
-## Dependencies
+## 3. Dependencies
 `iscan` is light-weight and doesn't rely on anything outside the standard library. The core functionality relies on the [ast](https://docs.python.org/3/library/ast.html#module-ast) module.
 
-## Usage
+## 4. Usage
+`iscan` provides both a command line interface and a Python API.
+
+### 4.1 Command line interface
 Basic usage requires simply providing the path to the directory you wish to scan.
 
 ```
@@ -79,18 +86,19 @@ Third-party packages:
   - urllib3
 ```
 
-The complete help message is shown below.
+The complete help message can be accessed as follows.
 ```
 $ iscan --help
-usage: iscan [-h] [-x DIR_TO_EXCLUDE] [--ignore-std-lib] DIR_TO_SCAN
+```
 
-Look for packages imported across all Python files in a given directory.
-
-positional arguments:
-  DIR_TO_SCAN        target directory to scan
-
-optional arguments:
-  -h, --help         show this help message and exit
-  -x DIR_TO_EXCLUDE  directory to exclude during scanning
-  --ignore-std-lib   whether to omit standard library modules
+### 4.2 Python API
+The Python API exposes a `run` function that returns the scanning result as a dictionary, split between third-party packages and standard library modules.
+```python
+>>> from iscan import run
+>>> dir_to_scan = './requests'
+>>> dir_to_exclude = './tests'  # Use None to not exclude anything (default)
+>>> result = run(dir_to_scan, dir_to_exclude)
+>>> result
+{'third_party': ['OpenSSL', 'certifi', 'chardet', 'cryptography', 'idna', 'simplejson', 'urllib3'],
+ 'std_lib': ['Cookie', 'StringIO', '__future__', '_winreg', 'base64', 'calendar', 'codecs', ...]}
 ```
