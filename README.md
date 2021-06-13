@@ -1,6 +1,11 @@
 # `iscan`: What are your dependencies?
 
-[![Build Status](https://zzhao212.visualstudio.com/iscan/_apis/build/status/ZhengnanZhao.iscan?branchName=master)](https://zzhao212.visualstudio.com/iscan/_build/latest?definitionId=1&branchName=master)
+[![python-versions](https://img.shields.io/pypi/pyversions/iscan)](https://github.com/zzhengnan/iscan)
+[![license](https://img.shields.io/pypi/l/iscan)](https://github.com/zzhengnan/iscan/blob/main/LICENSE)
+[![pypi](https://img.shields.io/pypi/v/iscan)](https://pypi.org/project/iscan/)
+[![conda](https://img.shields.io/conda/vn/conda-forge/iscan)](https://anaconda.org/conda-forge/iscan)
+[![downloads](https://pepy.tech/badge/iscan)](https://pepy.tech/project/iscan)
+[![build_status](https://img.shields.io/github/workflow/status/zzhengnan/iscan/run-tests/main)](https://github.com/zzhengnan/iscan/actions/workflows/run-tests.yml)
 
 Ever wondered which dependencies your Python project relies on?
 
