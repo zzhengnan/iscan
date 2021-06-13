@@ -52,7 +52,7 @@ def separate_third_party_from_std_lib(packages: Iterable[str]) -> Tuple[List[str
     """Separate third-party packages from standard library modules.
 
     Args:
-        packages: List of package names
+        packages: Package names
 
     Returns:
         Third-party packages, standard library modules
@@ -70,10 +70,10 @@ def get_std_lib(version: str) -> List[str]:
     """Scrape modules in the standard library for a given Python version.
 
     Args:
-        url: List of package names
+        version: Python version
 
     Returns:
-        Third-party packages, standard library modules
+        Standard library modules for a given Python version
     """
     import requests  # type: ignore
     from bs4 import BeautifulSoup  # type: ignore

@@ -66,14 +66,15 @@ def convert_source_to_tree(fpath: str) -> ast.Module:
     return tree
 
 
-def scan_directory(dir_to_scan: str, dir_to_exclude: str) -> List[str]:
+def scan_directory(dir_to_scan: str, dir_to_exclude: Optional[str] = None) -> List[str]:
     """Extract packages imported across all Python files in a directory.
 
     Args:
         dir_to_scan: Path to the directory of interest
+        dir_to_exclude: Path to the directory to be excluded during scanning
 
     Returns:
-        List of packages imported; might contain duplicates
+        Imported packages; might contain duplicates
     """
     all_imports = []
     for root_dir, _, fnames in os.walk(top=dir_to_scan):
@@ -115,10 +116,10 @@ def get_unique_base_packages(packages: Iterable[str]) -> List[str]:
     """Remove duplicates and extract the base package names.
 
     Args:
-        packages: List of package names that might contain duplicates
+        packages: Package names that might contain duplicates
 
     Returns:
-        List of unique base package names
+        Unique base package names
     """
     return sorted(set(map(get_base_name, packages)))
 
