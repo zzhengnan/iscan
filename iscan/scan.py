@@ -133,12 +133,14 @@ def show_result(result: Dict[str, List[str]], ignore_std_lib: bool) -> None:
     """
     third_party, std_lib = result['third_party'], result['std_lib']
 
-    print('\nThird-party packages:\n  - ', end='')
-    print('\n  - '.join(third_party))
+    result = 'Third-party packages:\n  - '
+    result += '\n  - '.join(third_party)
 
-    if std_lib and not ignore_std_lib:
-        print('\nStandard library modules:\n  - ', end='')
-        print('\n  - '.join(std_lib))
+    if not ignore_std_lib:
+        result += '\nStandard library modules:\n  - '
+        result += '\n  - '.join(std_lib)
+
+    print(result)
 
 
 def run(dir_to_scan: str, dir_to_exclude: Optional[str] = None) -> Dict[str, List[str]]:
