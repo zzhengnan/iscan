@@ -42,14 +42,14 @@ def test_get_base_name(full_name, expected):
 
 
 @pytest.mark.parametrize('dir_to_exclude, expected', [
-    (None, {
-        'third_party': ['matplotlib', 'numpy', 'pandas'],
-        'std_lib': ['ctypes', 'datetime', 'os', 'shutil', 'time']
-    }),
-    (join(CURRENT_DIR, 'test_package', 'city'), {
-        'third_party': ['matplotlib', 'numpy', 'pandas'],
-        'std_lib': ['os', 'shutil', 'time']
-    })
+    (None, (
+        {'matplotlib': 1, 'numpy': 1, 'pandas': 1},
+        {'ctypes': 1, 'datetime': 1, 'os': 1, 'shutil': 1, 'time': 1}
+    )),
+    (join(CURRENT_DIR, 'test_package', 'city'), (
+        {'matplotlib': 1, 'numpy': 1, 'pandas': 1},
+        {'os': 1, 'shutil': 1, 'time': 1}
+    ))
 ])
 def test_run(dir_to_exclude, expected):
     dir_to_scan = join(CURRENT_DIR, 'test_package')
