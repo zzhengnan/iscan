@@ -113,18 +113,6 @@ def get_base_name(full_name: str) -> str:
     return full_name.split('.')[0]
 
 
-def get_unique_base_packages(packages: Iterable[str]) -> List[str]:
-    """Remove duplicates and extract the base package names.
-
-    Args:
-        packages: Package names that might contain duplicates
-
-    Returns:
-        Unique base package names
-    """
-    return sorted(set(map(get_base_name, packages)))
-
-
 def sort_counter(counter: Counter, alphabetical: bool) -> Dict[str, int]:
     """Sort counter according to custom logic.
 

@@ -3,7 +3,7 @@ from os.path import abspath, dirname, join
 import pytest
 
 from iscan.scan import (ImportScanner, convert_source_to_tree, get_base_name,
-                        get_unique_base_packages, run, scan_directory)
+                        run, scan_directory)
 
 
 CURRENT_DIR = abspath(dirname(__file__))
@@ -39,16 +39,6 @@ def test_scan_directory(dir_to_exclude, expected):
 ])
 def test_get_base_name(full_name, expected):
     assert get_base_name(full_name) == expected
-
-
-@pytest.mark.parametrize('packages, expected', [
-    (['foo', 'foo.bar'], ['foo']),
-    (['foo.bar', 'bar.foo'], ['bar', 'foo']),
-    (['foo', 'bar'], ['bar', 'foo']),
-    (['foo_bar_baz.batman'], ['foo_bar_baz'])
-])
-def test_get_unique_base_packages(packages, expected):
-    assert get_unique_base_packages(packages) == expected
 
 
 @pytest.mark.parametrize('dir_to_exclude, expected', [
