@@ -4,7 +4,8 @@ aggregate the names of all the imported packages
 import argparse
 import ast
 import os
-from typing import Dict, Iterable, List, Optional
+from collections import Counter
+from typing import Dict, Iterable, List, Optional, Tuple
 
 from iscan.std_lib import separate_third_party_from_std_lib
 
@@ -124,26 +125,45 @@ def get_unique_base_packages(packages: Iterable[str]) -> List[str]:
     return sorted(set(map(get_base_name, packages)))
 
 
-def show_result(result: Dict[str, List[str]], ignore_std_lib: bool) -> None:
+def sort_counter(counter: Counter, alphabetical: bool) -> Dict[str, int]:
+    """Sort counter according to custom logic.
+
+    Args:
+        counter: Imported packages and their corresponding count
+        alphabetical: Whether to sort counter alphabetically
+
+    Returns:
+        Sorted counter
+    """
+    def custom_order(tup):
+        # Sort first by count (descending), and then by name
+        return -tup[1], tup[0]
+
+    sort_key = None if alphabetical else custom_order
+    return dict(sorted(counter.items(), key=sort_key))
+
+
+def show_result(third_party: Dict[str, int], std_lib: Dict[str, int], ignore_std_lib: bool) -> None:
     """Print the result of running iscan.
 
     Args:
-        result: Imported third-party packages and standard library modules
+        third_party: Imported third-party packages and count
+        std_lib: Imported standard library modules and count
         ignore_std_lib: Whether to omit standard library modules in the output
     """
-    third_party, std_lib = result['third_party'], result['std_lib']
-
-    result = 'Third-party packages:\n  - '
-    result += '\n  - '.join(third_party)
+    result = 'Third-party packages:\n'
+    for name, count in third_party.items():
+        result += f'    {name:<20} {count}\n'
 
     if not ignore_std_lib:
-        result += '\nStandard library modules:\n  - '
-        result += '\n  - '.join(std_lib)
+        result += 'Standard library modules:\n'
+        for name, count in std_lib.items():
+            result += f'    {name:<20} {count}\n'
 
     print(result)
 
 
-def run(dir_to_scan: str, dir_to_exclude: Optional[str] = None) -> Dict[str, List[str]]:
+def run(dir_to_scan: str, dir_to_exclude: Optional[str] = None) -> Tuple[Counter, Counter]:
     """Run iscan for a given set of parameters.
 
     Args:
@@ -151,12 +171,13 @@ def run(dir_to_scan: str, dir_to_exclude: Optional[str] = None) -> Dict[str, Lis
         dir_to_exclude: Path to the directory to be excluded during scanning
 
     Returns:
-        Third-party packages and standard library modules
+        Imported third-party packages and count
+        Imported standard library modules and count
     """
-    all_imports = scan_directory(dir_to_scan, dir_to_exclude)
-    unique_imports = get_unique_base_packages(all_imports)
-    third_party, std_lib = separate_third_party_from_std_lib(unique_imports)
-    return dict(third_party=third_party, std_lib=std_lib)
+    full_packages = scan_directory(dir_to_scan, dir_to_exclude)
+    base_packages = map(get_base_name, full_packages)
+    third_party, std_lib = separate_third_party_from_std_lib(base_packages)
+    return Counter(third_party), Counter(std_lib)
 
 
 def cli() -> argparse.Namespace:
@@ -183,16 +204,26 @@ def cli() -> argparse.Namespace:
         default=False,
         help='whether to omit standard library modules'
     )
+    parser.add_argument(
+        '--alphabetical',
+        dest='ALPHABETICAL',
+        action='store_const',
+        const=True,
+        default=False,
+        help='whether to sort output packages alphabetically'
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = cli()
-    result = run(args.DIR_TO_SCAN, args.DIR_TO_EXCLUDE)
+    third_party, std_lib = run(args.DIR_TO_SCAN, args.DIR_TO_EXCLUDE)
+    third_party = sort_counter(third_party, args.ALPHABETICAL)  # type: ignore
+    std_lib = sort_counter(std_lib, args.ALPHABETICAL)  # type: ignore
 
     print(
         f'Packages imported across all Python files in directory "{args.DIR_TO_SCAN}"',
         end=f', excluding "{args.DIR_TO_EXCLUDE}"\n' if args.DIR_TO_EXCLUDE else '\n'
     )
 
-    show_result(result, args.IGNORE_STD_LIB)
+    show_result(third_party, std_lib, args.IGNORE_STD_LIB)
