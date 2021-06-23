@@ -139,14 +139,24 @@ def show_result(third_party: Dict[str, int], std_lib: Dict[str, int], ignore_std
         std_lib: Imported standard library modules and count
         ignore_std_lib: Whether to omit standard library modules in the output
     """
-    result = 'Third-party packages:\n'
+    result = '''
+--------------------------
+   Third-party packages
+--------------------------
+NAME                 COUNT
+'''
     for name, count in third_party.items():
-        result += f'    {name:<20} {count}\n'
+        result += f'{name:<20} {count:>5}\n'
 
     if not ignore_std_lib:
-        result += 'Standard library modules:\n'
+        result += '''
+--------------------------
+ Standard library modules
+--------------------------
+NAME                 COUNT
+'''
         for name, count in std_lib.items():
-            result += f'    {name:<20} {count}\n'
+            result += f'{name:<20} {count:>5}\n'
 
     print(result)
 
@@ -172,7 +182,7 @@ def cli() -> argparse.Namespace:
     """Command line interface."""
     parser = argparse.ArgumentParser(
         allow_abbrev=False,
-        description='Look for packages imported across all Python files in a given directory.'
+        description='Aggregate third-party packages and standard library modules imported across all Python files in a given directory.'  # noqa: E501
     )
     parser.add_argument(
         'DIR_TO_SCAN',
@@ -190,7 +200,7 @@ def cli() -> argparse.Namespace:
         action='store_const',
         const=True,
         default=False,
-        help='whether to omit standard library modules'
+        help='whether to leave standard library modules out of the report'
     )
     parser.add_argument(
         '--alphabetical',
@@ -198,7 +208,7 @@ def cli() -> argparse.Namespace:
         action='store_const',
         const=True,
         default=False,
-        help='whether to sort output packages alphabetically'
+        help='whether to sort the report alphabetically'
     )
     return parser.parse_args()
 
@@ -208,10 +218,4 @@ def main() -> None:
     third_party, std_lib = run(args.DIR_TO_SCAN, args.DIR_TO_EXCLUDE)
     third_party = sort_counter(third_party, args.ALPHABETICAL)  # type: ignore
     std_lib = sort_counter(std_lib, args.ALPHABETICAL)  # type: ignore
-
-    print(
-        f'Packages imported across all Python files in directory "{args.DIR_TO_SCAN}"',
-        end=f', excluding "{args.DIR_TO_EXCLUDE}"\n' if args.DIR_TO_EXCLUDE else '\n'
-    )
-
     show_result(third_party, std_lib, args.IGNORE_STD_LIB)
