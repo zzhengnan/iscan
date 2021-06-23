@@ -1,9 +1,10 @@
+from collections import Counter
 from os.path import abspath, dirname, join
 
 import pytest
 
 from iscan.scan import (ImportScanner, convert_source_to_tree, get_base_name,
-                        get_unique_base_packages, run, scan_directory)
+                        run, scan_directory, sort_counter)
 
 
 CURRENT_DIR = abspath(dirname(__file__))
@@ -23,12 +24,12 @@ def test_import_scanner(module_name, expected):
 
 
 @pytest.mark.parametrize('dir_to_exclude, expected', [
-    (None, ['ctypes', 'datetime', 'matplotlib.pyplot', 'numpy', 'os.path', 'pandas', 'shutil', 'time']),
-    (join(CURRENT_DIR, 'test_package', 'city'), ['matplotlib.pyplot', 'numpy', 'os.path', 'pandas', 'shutil', 'time'])
+    (None, {'ctypes', 'datetime', 'matplotlib.pyplot', 'numpy', 'os.path', 'pandas', 'shutil', 'time'}),
+    (join(CURRENT_DIR, 'test_package', 'city'), {'matplotlib.pyplot', 'numpy', 'os.path', 'pandas', 'shutil', 'time'})
 ])
 def test_scan_directory(dir_to_exclude, expected):
     dir_to_scan = join(CURRENT_DIR, 'test_package')
-    assert sorted(scan_directory(dir_to_scan, dir_to_exclude)) == expected
+    assert set(scan_directory(dir_to_scan, dir_to_exclude)) == expected
 
 
 @pytest.mark.parametrize('full_name, expected', [
@@ -41,26 +42,26 @@ def test_get_base_name(full_name, expected):
     assert get_base_name(full_name) == expected
 
 
-@pytest.mark.parametrize('packages, expected', [
-    (['foo', 'foo.bar'], ['foo']),
-    (['foo.bar', 'bar.foo'], ['bar', 'foo']),
-    (['foo', 'bar'], ['bar', 'foo']),
-    (['foo_bar_baz.batman'], ['foo_bar_baz'])
-])
-def test_get_unique_base_packages(packages, expected):
-    assert get_unique_base_packages(packages) == expected
-
-
 @pytest.mark.parametrize('dir_to_exclude, expected', [
-    (None, {
-        'third_party': ['matplotlib', 'numpy', 'pandas'],
-        'std_lib': ['ctypes', 'datetime', 'os', 'shutil', 'time']
-    }),
-    (join(CURRENT_DIR, 'test_package', 'city'), {
-        'third_party': ['matplotlib', 'numpy', 'pandas'],
-        'std_lib': ['os', 'shutil', 'time']
-    })
+    (None, (
+        {'matplotlib': 1, 'numpy': 2, 'pandas': 1},
+        {'ctypes': 1, 'datetime': 1, 'os': 1, 'shutil': 2, 'time': 2}
+    )),
+    (join(CURRENT_DIR, 'test_package', 'city'), (
+        {'matplotlib': 1, 'numpy': 2, 'pandas': 1},
+        {'os': 1, 'shutil': 2, 'time': 2}
+    ))
 ])
 def test_run(dir_to_exclude, expected):
     dir_to_scan = join(CURRENT_DIR, 'test_package')
     assert run(dir_to_scan, dir_to_exclude) == expected
+
+
+@pytest.mark.parametrize('alphabetical, expected', [
+    (True, ['a', 'b', 'c', 'd']),
+    (False, ['d', 'a', 'c', 'b'])
+])
+def test_sort_counter(alphabetical, expected):
+    orig = Counter({'b': 1, 'a': 2, 'c': 2, 'd': 4})
+    computed_keys = list(sort_counter(orig, alphabetical))
+    assert computed_keys == expected
