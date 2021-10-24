@@ -44,8 +44,9 @@ STD_LIB_36 = ['secrets']
 STD_LIB_37 = ['contextvars', 'dataclasses']
 STD_LIB_38 = []  # type: ignore
 STD_LIB_39 = ['graphlib', 'zoneinfo']
+STD_LIB_310 = []  # type: ignore
 
-STD_LIB = STD_LIB_27 + STD_LIB_35 + STD_LIB_36 + STD_LIB_37 + STD_LIB_38 + STD_LIB_39
+STD_LIB = STD_LIB_27 + STD_LIB_35 + STD_LIB_36 + STD_LIB_37 + STD_LIB_38 + STD_LIB_39 + STD_LIB_310
 
 
 def separate_third_party_from_std_lib(packages: Iterable[str]) -> Tuple[List[str], List[str]]:
@@ -90,7 +91,7 @@ def get_std_lib(version: str) -> List[str]:
 
 
 if __name__ == '__main__':
-    versions = ['2.7', '3.5', '3.6', '3.7', '3.8', '3.9']
+    versions = ['2.7', '3.5', '3.6', '3.7', '3.8', '3.9', '3.10']
     cumulative = []
     for version in versions:
         std_lib = get_std_lib(version)
