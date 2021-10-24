@@ -9,12 +9,19 @@
 
 Ever wondered which dependencies your Python project relies on? `iscan` gives you a clear view of all the third-party packages and standard library modules your project uses.
 
-- [Quick start](#quick-start)
 - [Installation](#installation)
+- [Quick start](#quick-start)
 - [Dependencies](#dependencies)
 - [Usage](#usage)
     - [Command line interface](#command-line-interface)
     - [Python API](#python-api)
+
+## Installation
+`iscan` can be installed using either conda or pip.
+```
+$ conda install iscan -c conda-forge
+$ python -m pip install iscan
+```
 
 ## Quick start
 Simply provide the path to your project. That's it!
@@ -47,13 +54,6 @@ time                     3
 urllib                   3
 warnings                 3
 ...
-```
-
-## Installation
-`iscan` can be installed using either conda or pip.
-```
-$ conda install iscan -c conda-forge
-$ python -m pip install iscan
 ```
 
 ## Dependencies
@@ -98,7 +98,7 @@ $ iscan --help
 ```
 
 ### Python API
-The Python API provides a `run` function that returns the scanning result and import count in the form of two [Counter](https://docs.python.org/3/library/collections.html#collections.Counter) objects, split between third-party packages and standard library modules.
+The Python API exposes a `run` function that returns the scanning result and import count in the form of two [Counter](https://docs.python.org/3/library/collections.html#collections.Counter) objects, split between third-party packages and standard library modules.
 ```python
 >>> from iscan import run
 >>> dir_to_scan = './requests'

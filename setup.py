@@ -21,7 +21,7 @@ setuptools.setup(
     version=iscan.__version__,
     url='https://github.com/zzhengnan/iscan',
     author='Zhengnan Zhao',
-    description="iscan helps you identify your project's dependencies",
+    description="iscan helps you identify your project's dependencies.",
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
     packages=setuptools.find_packages(),
@@ -32,6 +32,7 @@ setuptools.setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
     ]
