@@ -5,7 +5,6 @@
 [![pypi](https://img.shields.io/pypi/v/iscan)](https://pypi.org/project/iscan/)
 [![conda](https://img.shields.io/conda/vn/conda-forge/iscan)](https://anaconda.org/conda-forge/iscan)
 [![downloads](https://pepy.tech/badge/iscan)](https://pepy.tech/project/iscan)
-[![build_status](https://img.shields.io/github/workflow/status/zzhengnan/iscan/run-tests/main)](https://github.com/zzhengnan/iscan/actions/workflows/run-tests.yml)
 
 Ever wondered which dependencies your Python project relies on? `iscan` gives you a clear view of all the third-party packages and standard library modules your project uses.
 
