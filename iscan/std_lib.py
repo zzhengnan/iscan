@@ -47,6 +47,7 @@ STD_LIB_BY_VERSION = {
     '3.10': ['idlelib'],
     '3.11': ['_tkinter', 'sitecustomize', 'tomllib', 'usercustomize'],
     '3.12': [],
+    '3.13': [],
 }
 STD_LIB = list(itertools.chain.from_iterable(STD_LIB_BY_VERSION.values()))  # type: ignore
 
