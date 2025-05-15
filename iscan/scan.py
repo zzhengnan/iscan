@@ -5,7 +5,7 @@ import argparse
 import ast
 import os
 from collections import Counter
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from iscan.std_lib import separate_third_party_from_std_lib
 
