@@ -4,4 +4,5 @@ isort:skip_file
 import shutil
 
 import matplotlib.pyplot as plt
-import numpy as np, pandas as pd  # noqa: E401
+import numpy as np  # noqa: E401
+import pandas as pd

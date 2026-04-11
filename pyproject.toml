@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iscan"
+dynamic = ["version"]
+description = "iscan helps you identify your project's dependencies."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Zhengnan Zhao"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Repository = "https://github.com/zzhengnan/iscan"
+
+[project.scripts]
+iscan = "iscan.scan:main"
+
+[project.optional-dependencies]
+build = ["setuptools", "twine", "wheel"]
+dev = [
+    "beautifulsoup4",
+    "coverage",
+    "mypy",
+    "pre-commit",
+    "pytest",
+    "requests",
+    "ruff",
+]
+
+[tool.setuptools.dynamic]
+version = {attr = "iscan.__version__"}
+
+[tool.ruff]
+line-length = 120
+exclude = ["build", "dist", "iscan/std_lib.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["F401"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["iscan"]
+lines-between-types = 0
+lines-after-imports = 2
+
+[tool.mypy]
+[[tool.mypy.overrides]]
+module = "iscan.tests.*"
+ignore_errors = true
