@@ -1,6 +1,4 @@
-"""Import two packages on a single line to see if it breaks the code.
-isort:skip_file
-"""
+"""Import two packages on a single line to see if it breaks the code."""
 import shutil
 
 import matplotlib.pyplot as plt

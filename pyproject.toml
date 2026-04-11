@@ -21,16 +21,10 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-
-[project.urls]
-Repository = "https://github.com/zzhengnan/iscan"
-
-[project.scripts]
-iscan = "iscan.scan:main"
-
-[project.optional-dependencies]
-build = ["setuptools", "twine", "wheel"]
-dev = [
+urls.Repository = "https://github.com/zzhengnan/iscan"
+scripts.iscan = "iscan.scan:main"
+optional-dependencies.build = ["setuptools", "twine", "wheel"]
+optional-dependencies.dev = [
     "beautifulsoup4",
     "coverage",
     "mypy",
