@@ -1,4 +1,4 @@
-"""Import two packages on a single line to see if it breaks the code."""
+"""Import third-party packages to test scanning behaviour."""
 import shutil
 
 import matplotlib.pyplot as plt
