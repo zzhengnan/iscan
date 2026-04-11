@@ -88,7 +88,9 @@ def get_std_lib(version: str) -> List[str]:
     resp.raise_for_status()
 
     soup = BeautifulSoup(resp.text, 'html.parser')
-    links = soup.find('table').find_all('a', href=True)
+    table = soup.find('table')
+    assert table is not None
+    links = table.find_all('a', href=True)
     std_lib = [link.text.split('.')[0] for link in links]
 
     return sorted(set(std_lib))
