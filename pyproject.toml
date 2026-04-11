@@ -23,7 +23,7 @@ classifiers = [
 ]
 urls.Repository = "https://github.com/zzhengnan/iscan"
 scripts.iscan = "iscan.scan:main"
-optional-dependencies.build = ["setuptools", "twine", "wheel"]
+optional-dependencies.build = ["build", "setuptools", "twine", "wheel"]
 optional-dependencies.dev = [
     "beautifulsoup4",
     "coverage",
